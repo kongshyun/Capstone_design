@@ -14,7 +14,7 @@ double max_time_2ms=1;
 double max_time_1ms=0.5;
 double scale_3ms=0.01;
 double scale_2ms=0.017;
-double scale_1ms=0.02;
+double scale_1ms=0.01;
 
 /*
 double delay_3ms=19.3;
@@ -109,13 +109,12 @@ void Agv_decel(double vel_type,double Max_time,double scale,int target_time, int
     cycle_start_time = millis();
     double Vel=VEL_TYPE(vel_type,sec);//속도공식
     double RPM=Vel*60/(3.14*0.057);//모터에 부여할 RPM
-    //double cmd_rpm=RPM;//AGV벨트풀리 3:1이므로 실제 모터에 부여할 RPM은 /3해야함.
     String cmd_str;//모터에 줄 속도 명령어
     cmd_str="mvc="+String(0)+","+String(RPM);
     Serial.println(cmd_str);
     Serial2.println(cmd_str);//----------------모터에명령통신-------
     sec=sec-scale;
-    //'3'누르면 멈춤
+    //'0'누르면 멈춤
     if(Serial.available()){
       char STOP=Serial.read();
       if(STOP=='0') return;
@@ -133,8 +132,8 @@ void Agv_decel(double vel_type,double Max_time,double scale,int target_time, int
 void Agv_constant(double vel_type,double constant_time)
 {
   double Vel=VEL_TYPE(vel_type,sec);//속도공식
-  double RPM=Vel*60/(3.14*0.058);//모터에 부여할 RPM
-  double cmd_rpm=RPM/2.75;//AGV벨트풀리 3:1이므로 실제 모터에 부여할 RPM은 /3해야함.
+  double RPM=Vel*60/(3.14*0.057);//모터에 부여할 RPM
+  double cmd_rpm=RPM;//AGV벨트풀리 3:1이므로 실제 모터에 부여할 RPM은 /3해야함.
   String cmd_str;//모터에 줄 속도 명령어
   cmd_str="mvc="+String(0)+","+String(cmd_rpm);
   //Serial.println(cmd_str);
