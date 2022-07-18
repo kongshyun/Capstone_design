@@ -1,0 +1,98 @@
+
+/*
+3ms속도=-((sec*sec*sec*3)/4)+((sec*sec*9)/4);
+2ms속도=-((sec*sec*sec)*4)+((sec*sec*6));
+1ms속도=-(16*sec*sec*sec)+(12*sec*sec);
+-1ms속도=-(-(16*sec*sec*sec)+(12*sec*sec));
+*/
+
+max_time_3ms=2;
+max_time_2ms=1;
+max_time_1ms=0.5;
+scale_3ms=0.01;
+scale_2ms=0.017;
+scale_1ms=0.01;
+
+delay_3ms=19.3;
+delay_2ms=10.2;
+delay_1ms=9;
+
+r = getv (_wheel_radius, 0);		// 바퀴 반지름
+// b = getv (_axle_length, 0);	
+g = getv (_gear_ratio, 0);			// 감속비
+
+enc = getv (_encoder_ppr, 2);	// 엔코더 해상도
+enc2_p = getv (_position, 2);
+
+pulse2met = 2*_PI*r/g/enc;		// 엔코더 펄스를 meter로 바꾸는 scale factor
+sec=0;
+
+while (1) {
+	co2=1;
+	
+//1ms속도-----------------------------------------------
+    VEL=1111;
+    while (sec<max_time_1ms){
+        v2=-(16*sec*sec*sec)+(12*sec*sec);
+		Rpm2   = v2*60/(3.14*0.057);
+        setv(_velocity_command, 2, Rpm2);
+		enc2 = getv (_position, 2);
+		sec=sec+scale_1ms;
+		sleep(delay_1ms);
+	}
+    while (sec>0){
+        v2=-(16*sec*sec*sec)+(12*sec*sec);
+		Rpm2   = v2*60/(3.14*0.057);
+        setv(_velocity_command, 2, Rpm2);
+		enc2 = getv (_position, 2);
+		sec=sec-scale_1ms;
+		sleep(delay_1ms);
+
+	}
+   
+    
+//2ms속도----------------------------------------------
+	VEL=2222;    
+	while (sec<max_time_2ms){
+        v2=-((sec*sec*sec)*4)+((sec*sec*6));
+		Rpm2   = v2*60/(3.14*0.057);
+        setv(_velocity_command, 2, Rpm2);
+		enc2 = getv (_position, 2);
+		sec=sec+scale_2ms;
+		sleep(delay_2ms);
+	}
+    while (sec>0){
+        v2=-((sec*sec*sec)*4)+((sec*sec*6));
+		Rpm2   = v2*60/(3.14*0.057);
+        setv(_velocity_command, 2, Rpm2);
+		enc2 = getv (_position, 2);
+		sec=sec-scale_2ms;
+		sleep(delay_2ms);
+
+	}
+
+
+/*파워서플라이 전원으로는 3ms속도 안나옴
+//3ms속도---------------------------------------------
+	VEL=3333;    
+	while (sec<max_time_3ms){
+        v2=-((sec*sec*sec*3)/4)+((sec*sec*9)/4);
+		Rpm2   = v2*60/(3.14*0.057);
+        setv(_velocity_command, 2, Rpm2);
+		enc2 = getv (_position, 2);
+		sec=sec+scale_3ms;
+		sleep(delay_3ms);
+	}
+    while (sec>0){
+        v2=-((sec*sec*sec*3)/4)+((sec*sec*9)/4);
+		Rpm2   = v2*60/(3.14*0.057);
+        setv(_velocity_command, 2, Rpm2);
+		enc2 = getv (_position, 2);
+		sec=sec-scale_3ms;
+		sleep(delay_3ms);
+
+	}
+*/
+    
+}
+
