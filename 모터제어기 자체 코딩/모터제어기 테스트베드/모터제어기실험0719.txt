@@ -2,8 +2,6 @@
 그리고 1ms가속 +감속 동안 걸린 시간 도출
 */
 
-
-
 /*
 3ms속도=-((sec*sec*sec*3)/4)+((sec*sec*9)/4);
 2ms속도=-((sec*sec*sec)*4)+((sec*sec*6));
@@ -16,7 +14,7 @@ max_time_3ms=2;
 max_time_2ms=1;
 max_time_1ms=0.5;
 scale_3ms=0.01;
-scale_2ms=0.017;
+scale_2ms=0.02;
 scale_1ms=0.01;
 
 delay_3ms=19.3;
@@ -34,36 +32,6 @@ pulse2met = 2*_PI*r/g/enc;		// 엔코더 펄스를 meter로 바꾸는 scale fact
 sec=0;
 met2rpm=60/(_PI*2*r);
 while (1) {
-/*
-//1ms속도-----------------------------------------------
-    VEL=1111;
-    time_2_0=clock();
-    while (sec<max_time_1ms){
-        v2=-(16*sec*sec*sec)+(12*sec*sec);
-		Rpm2   = v2*met2rpm;
-        setv(_velocity_command, 2, Rpm2);
-		enc2 = getv (_position, 2);
-		sec=sec+scale_1ms;
-		sleep(delay_1ms);
-	}
-    while (sec>0){
-        v2=-(16*sec*sec*sec)+(12*sec*sec);
-		Rpm2   = v2*met2rpm;
-        setv(_velocity_command, 2, Rpm2);
-		enc2 = getv (_position, 2);
-		sec=sec-scale_1ms;
-		sleep(delay_1ms);
-
-	}
-
-	enc2 = getv (_position, 2);//엔코더값 읽기
-	de2 = enc2 - enc2_first;//처음 엔코더값과 차이
-    enc_meter=de2 *pulse2met;//엔코더 값 차이를 meter단위로 변환
-	enc2_first = enc2;//초기 엔코더 값을 현재 엔코더값으로 변환
-    time=clock()-(time_2_0);
-    sleep(1000);
-*/
-
 //1ms속도-----------------------------------------------
 
     FIRST_TIME=clock();
@@ -100,43 +68,62 @@ while (1) {
 	    sleep(target_delay);
 
 	}
+	TIME=FIRST_TIME-clock();
 
 	enc2 = getv (_position, 2);//엔코더값 읽기
 	de2 = enc2 - enc2_first;//처음 엔코더값과 차이
     enc_meter=de2 *pulse2met;//엔코더 값 차이를 meter단위로 변환
 	enc2_first = enc2;//초기 엔코더 값을 현재 엔코더값으로 변환
     
-    TIME=FIRST_TIME-clock();
-
-/*
+    sleep(1000);
 
 //2ms속도----------------------------------------------
-    time_2_0=clock();
+
+	FIRST_TIME=clock();
 	VEL=2222;    
 	while (sec<max_time_2ms){
+		cycle_start_time=clock();
         v2=-((sec*sec*sec)*4)+((sec*sec*6));
 		Rpm2   = v2*met2rpm;
         setv(_velocity_command, 2, Rpm2);
 		enc2 = getv (_position, 2);
 		sec=sec+scale_2ms;
-		sleep(delay_2ms);
+
+		//원하는 시간만큼 돌리기
+
+    	cycle_end_time=clock();
+	    cycle_time=cycle_end_time-cycle_start_time;
+    	target_delay=(1000/50)-cycle_time;
+	    sleep(target_delay);
 	}
     while (sec>0){
+		cycle_start_time=clock();
         v2=-((sec*sec*sec)*4)+((sec*sec*6));
 		Rpm2   = v2*met2rpm;
         setv(_velocity_command, 2, Rpm2);
 		enc2 = getv (_position, 2);
 		sec=sec-scale_2ms;
-		sleep(delay_2ms);
 
+		//원하는 시간만큼 돌리기
+
+    	cycle_end_time=clock();
+	    cycle_time=cycle_end_time-cycle_start_time;
+    	target_delay=(1000/50)-cycle_time;
+	    sleep(target_delay);
 	}
+	TIME=FIRST_TIME-clock();
+
+
 	enc2 = getv (_position, 2);//엔코더값 읽기
 	de2 = enc2 - enc2_first;//처음 엔코더값과 차이
     enc_meter=de2 *pulse2met;//엔코더 값 차이를 meter단위로 변환
 	enc2_first = enc2;//초기 엔코더 값을 현재 엔코더값으로 변환
-    time=clock()-(time_2_0);
-    sleep(1000);
 
+	sleep(1000);
+
+
+
+/*
 파워서플라이 전원으로는 3ms속도 안나옴
 //3ms속도---------------------------------------------
 	VEL=3333;    
