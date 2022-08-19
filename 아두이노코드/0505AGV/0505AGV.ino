@@ -6,7 +6,7 @@
   -등속함수(속도, 유지시간);
   가속함수가 되는 동안 STOP명령을 주면 그때의 속도에서 그대로 감속된다.
 */
-
+double hi
 double max_time_3ms=2;
 double max_time_2ms=1;
 double max_time_1ms=0.5;
