@@ -1,0 +1,24 @@
+void Agv(float Time){  //sec
+  
+  for(float sec=0; sec < p_time;  sec += 0.02){
+    cycle_start_time = millis();
+     
+    SetPoint_L = - RPM;             // 가변저항으로 목표값 설정
+    SetPoint_R =   RPM; 
+    speed_pid_L.setpoint(SetPoint_L); // PID 함수에 목표값 넣기 
+    speed_pid_R.setpoint(SetPoint_R);
+    //speed_control();
+
+    Serial.print("Target : ");
+    Serial.print(RPM);
+    Serial.print(",");
+    Serial.print("RPM_L : ");
+    Serial.print(x_f_L);
+    Serial.print(",");
+    Serial.print("RPM_R : ");
+    Serial.print(x_f_R);
+    Serial.println();
+    
+    Calculate_delay( p_time*1000,  p_time*50 );
+  } 
+}
