@@ -57,6 +57,7 @@ void loop(){
         break;
       case '4':
         Serial.println("--------------------BBBB-----------");
+        Serial3.println("co1=1");Serial3.println("co2=1");
         Serial3.println("mvc=50,50");
         break;        
     }
